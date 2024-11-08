@@ -9,9 +9,18 @@ const LogisticsBookingPage: React.FC = () => {
   const [loadingPercentage, setLoadingPercentage] = useState(0);
   const [showOptions, setShowOptions] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
+  const [showFinalMessage, setShowFinalMessage] = useState(false);
   const [loadingText, setLoadingText] = useState("");
   const [loadingIconIndex, setLoadingIconIndex] = useState(0);
   const [selectedWeight, setSelectedWeight] = useState<number>(1);
+
+  const loadingStatusMessages = [
+    "Fetching available transport options...",
+    "Calculating optimal routes...",
+    "Checking availability of carriers...",
+    "Finalizing booking details...",
+    "Almost done...",
+  ];
 
   const transportOptions = [
     { mode: "Truck - Rail - Ship Mode", description: "Utilizes truck, rail, and ship for efficient delivery." },
@@ -47,11 +56,16 @@ const LogisticsBookingPage: React.FC = () => {
     setLoadingPercentage(0);
     setShowOptions(false);
     setShowConfirmation(false);
+    setShowFinalMessage(false);
 
     let progress = 0;
     const loadingInterval = setInterval(() => {
       progress += Math.floor(Math.random() * 10) + 5;
       setLoadingIconIndex((prevIndex) => (prevIndex + 1) % icons.length);
+
+      // Update loading text based on progress
+      const messageIndex = Math.min(Math.floor(progress / (100 / loadingStatusMessages.length)), loadingStatusMessages.length - 1);
+      setLoadingText(loadingStatusMessages[messageIndex]);
 
       if (progress >= 100) {
         clearInterval(loadingInterval);
@@ -60,7 +74,6 @@ const LogisticsBookingPage: React.FC = () => {
         setShowOptions(true);
       } else {
         setLoadingPercentage(progress);
-        setLoadingText("Processing...");
       }
     }, 500);
   };
@@ -68,6 +81,11 @@ const LogisticsBookingPage: React.FC = () => {
   const handleConfirmation = () => {
     setShowOptions(false);
     setShowConfirmation(true);
+  };
+
+  const handleFinalSubmit = () => {
+    setShowConfirmation(false);
+    setShowFinalMessage(true);
   };
 
   return (
@@ -88,7 +106,7 @@ const LogisticsBookingPage: React.FC = () => {
         </div>
       )}
 
-      {!isLoading && !showOptions && !showConfirmation && (
+      {!isLoading && !showOptions && !showConfirmation && !showFinalMessage && (
         <div className="w-full max-w-lg bg-[#3B81F6] p-8 rounded-lg shadow-md">
           <form onSubmit={(e) => { e.preventDefault(); handleSubmit(); }}>
             {/* Source Pincode */}
@@ -187,7 +205,7 @@ const LogisticsBookingPage: React.FC = () => {
                 </div>
                 <p className="text-white mt-4">Estimated Quote: {calculateEstimate(selectedWeight)} INR</p>
                 <button
-                  className="mt-4 bg-[#3B81F6] text-white py-2 px-4 rounded hover:bg-[#2f67c5]"
+                  className="mt-4 bg-[#3B81F6] text-white py-2 px-4 rounded-md"
                   onClick={handleConfirmation}
                 >
                   Confirm Booking
@@ -199,10 +217,23 @@ const LogisticsBookingPage: React.FC = () => {
       )}
 
       {showConfirmation && (
+        <div className="absolute inset-0 flex flex-col items-center justify-center bg-black bg-opacity-70 p-8">
+          <div className="text-white text-center p-6 bg-gray-800 rounded-lg shadow-md w-full max-w-lg">
+            <h2 className="text-2xl mb-4">Enter Your Details</h2>
+            <input type="text" placeholder="Name" className="w-full p-3 mb-4 bg-gray-700 text-white rounded-md" />
+            <input type="text" placeholder="WhatsApp Number" className="w-full p-3 mb-4 bg-gray-700 text-white rounded-md" />
+            <input type="email" placeholder="Email" className="w-full p-3 mb-4 bg-gray-700 text-white rounded-md" />
+            <button className="w-full py-3 bg-[#3B81F6] text-white rounded-md" onClick={handleFinalSubmit}>Submit</button>
+          </div>
+        </div>
+      )}
+
+      {showFinalMessage && (
         <div className="absolute inset-0 bg-black bg-opacity-70 flex items-center justify-center">
-          <div className="bg-gray-800 p-6 rounded-lg shadow-lg text-center">
-            <h2 className="text-2xl font-bold text-white">Booking Confirmed</h2>
-            <p className="text-white mt-4">Your logistics booking has been successfully confirmed.</p>
+          <div className="bg-gray-800 p-6 rounded-lg shadow-lg text-center max-w-md">
+            <h2 className="text-xl font-bold text-white mb-4">Bot Message</h2>
+            <p className="text-white mb-2">Our AI agent will contact you soon!</p>
+            <p className="text-gray-400 text-sm mt-4">Disclaimer: Our agent is currently under development, and this booking is only for demo purposes.</p>
           </div>
         </div>
       )}
