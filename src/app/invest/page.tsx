@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { FaTruck, FaTrain, FaShip, FaPlane } from "react-icons/fa";
+import { FaTruck, FaTrain, FaShip, FaPlane, FaRobot } from "react-icons/fa";
 
 const LogisticsBookingPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -23,18 +23,10 @@ const LogisticsBookingPage: React.FC = () => {
   ];
 
   const transportOptions = [
-    { mode: "Truck - Rail - Ship Mode", description: "Utilizes truck, rail, and ship for efficient delivery." },
-    { mode: "Rail - Truck - Ship Mode", description: "Uses rail for long distances, then transfers to truck and ship." },
-    { mode: "Ship - Truck - Rail Mode", description: "Optimal for water routes combined with truck and rail." },
-    { mode: "Truck - Ship - Rail Mode", description: "Efficient for sea and land transportation needs." },
-    { mode: "Truck - Rail - Truck Mode", description: "Flexible for ground transport across longer distances." },
-    { mode: "Rail - Ship - Truck Mode", description: "Cost-effective for combined land and water transport." },
-    { mode: "Ship - Rail - Truck Mode", description: "Long-distance by ship and rail, local by truck." },
-    { mode: "Truck - Ship - Rail Mode", description: "Balanced solution for cross-country routes." },
-    { mode: "Rail - Truck - Ship Mode", description: "Speedy option using truck, rail, and ship." },
-    { mode: "Truck - Rail - Truck Mode", description: "Best suited for ground-exclusive routes." },
+    { mode: "Truck - Ship - Truck ", description: "Optimal for water routes combined with truck." },
+    { mode: "Rail - Ship - Truck ", description: "Uses rail for long distances, then transfers to truck and ship." },
+    { mode: "Truck - Plane - Truck ", description: "Speedy option using truck and plane. Your shipment will reach soon" },
   ];
-
   const icons = [
     <FaTruck className="text-blue-500" size={50} />,
     <FaTrain className="text-blue-500" size={50} />,
@@ -42,10 +34,6 @@ const LogisticsBookingPage: React.FC = () => {
     <FaPlane className="text-blue-500" size={50} />
   ];
 
-  const getRandomOptions = () => {
-    const shuffledOptions = transportOptions.sort(() => Math.random() - 0.5);
-    return shuffledOptions.slice(0, 3);
-  };
 
   const calculateEstimate = (weight: number) => {
     return weight * (Math.floor(Math.random() * (400 - 100 + 1)) + 100);
@@ -89,7 +77,7 @@ const LogisticsBookingPage: React.FC = () => {
   };
 
   return (
-    <div className="bg-black min-h-screen flex items-center justify-center p-4 relative">
+    <div className="bg-black min-h-screen flex flex-col items-center justify-center p-4 relative">
       {isLoading && (
         <div className="absolute inset-0 bg-black bg-opacity-70 flex items-center justify-center">
           <div className="flex flex-col items-center">
@@ -106,6 +94,7 @@ const LogisticsBookingPage: React.FC = () => {
         </div>
       )}
 
+
       {!isLoading && !showOptions && !showConfirmation && !showFinalMessage && (
         <div className="w-full max-w-lg bg-[#3B81F6] p-8 rounded-lg shadow-md">
           <form onSubmit={(e) => { e.preventDefault(); handleSubmit(); }}>
@@ -115,7 +104,7 @@ const LogisticsBookingPage: React.FC = () => {
               <input
                 type="number"
                 className="w-full p-3 bg-gray-700 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Enter source pincode"
+                placeholder="Enter source pincode" required
               />
             </div>
 
@@ -125,7 +114,7 @@ const LogisticsBookingPage: React.FC = () => {
               <input
                 type="number"
                 className="w-full p-3 bg-gray-700 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Enter destination pincode"
+                placeholder="Enter destination pincode" required
               />
             </div>
 
@@ -136,7 +125,7 @@ const LogisticsBookingPage: React.FC = () => {
                 <input
                   type="number"
                   className="w-full p-3 bg-gray-700 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="Enter length"
+                  placeholder="Enter length" required
                 />
               </div>
               <div className="w-1/3">
@@ -144,7 +133,7 @@ const LogisticsBookingPage: React.FC = () => {
                 <input
                   type="number"
                   className="w-full p-3 bg-gray-700 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="Enter width"
+                  placeholder="Enter width" required
                 />
               </div>
               <div className="w-1/3">
@@ -152,7 +141,7 @@ const LogisticsBookingPage: React.FC = () => {
                 <input
                   type="number"
                   className="w-full p-3 bg-gray-700 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="Enter height"
+                  placeholder="Enter height" required
                 />
               </div>
             </div>
@@ -163,7 +152,7 @@ const LogisticsBookingPage: React.FC = () => {
               <input
                 type="number"
                 className="w-full p-3 bg-gray-700 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Enter weight"
+                placeholder="Enter weight" required
                 onChange={(e) => setSelectedWeight(Number(e.target.value))}
               />
             </div>
@@ -174,7 +163,7 @@ const LogisticsBookingPage: React.FC = () => {
               <input
                 type="number"
                 className="w-full p-3 bg-gray-700 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Enter max delivery time"
+                placeholder="Enter max delivery time" required
               />
             </div>
 
@@ -184,34 +173,36 @@ const LogisticsBookingPage: React.FC = () => {
       )}
 
       {showOptions && !showConfirmation && (
+        
         <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-70 p-4">
           <div className="flex space-x-4 items-center">
-            {getRandomOptions().map((option, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, translateY: 50 }}
-                animate={{ opacity: 1, translateY: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.2 }}
-                className="bg-gray-800 bg-opacity-80 p-6 rounded-lg shadow-lg w-80 text-center"
-              >
-                <h2 className="text-xl font-bold text-white">{option.mode}</h2>
-                <p className="text-white mt-2">{option.description}</p>
-                <div className="text-white mt-4">
-                  <p><FaTruck className="inline mr-2" /> First mile</p>
-                  <p className="text-gray-500">. . .</p>
-                  <p><FaTrain className="inline mr-2" /> Mid-mile</p>
-                  <p className="text-gray-500">. . .</p>
-                  <p><FaShip className="inline mr-2" /> Last mile</p>
-                </div>
-                <p className="text-white mt-4">Estimated Quote: {calculateEstimate(selectedWeight)} INR</p>
-                <button
-                  className="mt-4 bg-[#3B81F6] text-white py-2 px-4 rounded-md"
-                  onClick={handleConfirmation}
-                >
-                  Confirm Booking
-                </button>
-              </motion.div>
-            ))}
+          {transportOptions.map((option, index) => (
+  <motion.div
+    key={index}
+    initial={{ opacity: 0, translateY: 50 }}
+    animate={{ opacity: 1, translateY: 0 }}
+    transition={{ duration: 0.5, delay: index * 0.2 }}
+    className="bg-white bg-opacity-30 backdrop-blur-md p-6 rounded-lg shadow-lg w-80 text-center"
+  >
+    <h2 className="text-xl font-bold text-white">{option.mode}</h2>
+    <p className="text-white mt-2">{option.description}</p>
+    <div className="text-white mt-4">
+      <p><FaTruck className="inline mr-2" /> First mile</p>
+      <p className="text-gray-500">. . .</p>
+      <p><FaShip className="inline mr-2" /> Mid-mile</p>
+      <p className="text-gray-500">. . .</p>
+      <p><FaTruck className="inline mr-2" /> Last mile</p>
+    </div>
+    <p className="text-white mt-4">Estimated Quote: {calculateEstimate(selectedWeight)} INR</p>
+    <button
+      className="mt-4 bg-[#3B81F6] text-white py-2 px-4 rounded-md"
+      onClick={handleConfirmation}
+    >
+      Confirm Booking
+    </button>
+  </motion.div>
+))}
+
           </div>
         </div>
       )}
@@ -220,9 +211,9 @@ const LogisticsBookingPage: React.FC = () => {
         <div className="absolute inset-0 flex flex-col items-center justify-center bg-black bg-opacity-70 p-8">
           <div className="text-white text-center p-6 bg-gray-800 rounded-lg shadow-md w-full max-w-lg">
             <h2 className="text-2xl mb-4">Enter Your Details</h2>
-            <input type="text" placeholder="Name" className="w-full p-3 mb-4 bg-gray-700 text-white rounded-md" />
-            <input type="text" placeholder="WhatsApp Number" className="w-full p-3 mb-4 bg-gray-700 text-white rounded-md" />
-            <input type="email" placeholder="Email" className="w-full p-3 mb-4 bg-gray-700 text-white rounded-md" />
+            <input type="text" placeholder="Name" className="w-full p-3 mb-4 bg-gray-700 text-white rounded-md" required/>
+            <input type="text" placeholder="WhatsApp Number" className="w-full p-3 mb-4 bg-gray-700 text-white rounded-md" required/>
+            <input type="email" placeholder="Email" className="w-full p-3 mb-4 bg-gray-700 text-white rounded-md" required/>
             <button className="w-full py-3 bg-[#3B81F6] text-white rounded-md" onClick={handleFinalSubmit}>Submit</button>
           </div>
         </div>
@@ -231,8 +222,11 @@ const LogisticsBookingPage: React.FC = () => {
       {showFinalMessage && (
         <div className="absolute inset-0 bg-black bg-opacity-70 flex items-center justify-center">
           <div className="bg-gray-800 p-6 rounded-lg shadow-lg text-center max-w-md">
-            <h2 className="text-xl font-bold text-white mb-4">Bot Message</h2>
-            <p className="text-white mb-2">Our AI agent will contact you soon!</p>
+            <h2 className="text-xl font-bold text-white mb-4">Thank You for booking</h2>
+            <div className="flex items-center justify-center mb-4">
+              <FaRobot className="text-blue-500 mr-2" size={24} />
+              <p className="text-white">Our AI agent will contact you soon!</p>
+            </div>
             <p className="text-gray-400 text-sm mt-4">Disclaimer: Our agent is currently under development, and this booking is only for demo purposes.</p>
           </div>
         </div>
