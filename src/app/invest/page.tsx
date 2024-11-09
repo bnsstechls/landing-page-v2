@@ -118,34 +118,6 @@ const LogisticsBookingPage: React.FC = () => {
               />
             </div>
 
-            {/* Length (cm), Width (cm), Height (cm) */}
-            <div className="flex gap-4 mb-4">
-              <div className="w-1/3">
-                <label className="block text-white mb-2">Length (cm)</label>
-                <input
-                  type="number"
-                  className="w-full p-3 bg-gray-700 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="Enter length" required
-                />
-              </div>
-              <div className="w-1/3">
-                <label className="block text-white mb-2">Width (cm)</label>
-                <input
-                  type="number"
-                  className="w-full p-3 bg-gray-700 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="Enter width" required
-                />
-              </div>
-              <div className="w-1/3">
-                <label className="block text-white mb-2">Height (cm)</label>
-                <input
-                  type="number"
-                  className="w-full p-3 bg-gray-700 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="Enter height" required
-                />
-              </div>
-            </div>
-
             {/* Weight (tons) */}
             <div className="mb-4">
               <label className="block text-white mb-2">Weight (tons)</label>
